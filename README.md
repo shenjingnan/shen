@@ -1,4 +1,9 @@
 # Shen
+
+[![PyPI version](https://badge.fury.io/py/shen.svg)](https://badge.fury.io/py/shen)
+[![Python Version](https://img.shields.io/pypi/pyversions/shen.svg)](https://pypi.org/project/shen/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 这个项目会是一个AI命令行工具，专注于处理编程以外的事情
 
 因为我看到了Claude Code神一样的编程能力，他的交互和效果令我惊讶。
@@ -33,3 +38,106 @@
 
 不过目前的确没有想好他和Claude Code的真正差异是什么，感觉Claude Code除了写代码，其他事情也干的不错。
 我还得仔细思考一下。
+
+## 安装
+
+### 从 PyPI 安装（推荐）
+
+```bash
+pip install shen
+```
+
+### 从源码安装
+
+```bash
+git clone https://github.com/shenjingnan/shen.git
+cd shen
+pip install -e .
+```
+
+## 使用方法
+
+### 基本命令
+
+```bash
+# 查看版本
+shen --version
+
+# 查看帮助
+shen --help
+
+# 获取 Shen 信息
+shen info
+
+# 列出可用插件
+shen plugins
+
+# 运行任务
+shen run "帮我整理下载文件夹"
+
+# 交互模式运行任务
+shen run "检查系统安全" --interactive
+```
+
+### 调试模式
+
+```bash
+# 启用调试模式
+shen --debug info
+```
+
+## 开发
+
+### 环境设置
+
+```bash
+# 安装 Poetry
+pip install poetry
+
+# 安装依赖
+poetry install
+
+# 激活虚拟环境
+poetry shell
+```
+
+### 运行测试
+
+```bash
+# 运行所有测试
+poetry run pytest
+
+# 运行测试并查看覆盖率
+poetry run pytest --cov
+
+# 运行特定测试
+poetry run pytest tests/test_cli.py
+```
+
+### 代码质量
+
+```bash
+# 格式化代码
+poetry run black src tests
+
+# 代码检查
+poetry run ruff check src tests
+
+# 类型检查
+poetry run mypy src
+
+# 运行所有检查
+poetry run black src tests && poetry run ruff check src tests && poetry run mypy src
+```
+
+### 贡献指南
+
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add some amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 开启 Pull Request
+
+## 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
