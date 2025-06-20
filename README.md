@@ -1,7 +1,7 @@
 # Shen
 
-[![PyPI version](https://badge.fury.io/py/shen.svg)](https://badge.fury.io/py/shen)
-[![Python Version](https://img.shields.io/pypi/pyversions/shen.svg)](https://pypi.org/project/shen/)
+[![PyPI version](https://badge.fury.io/py/shen-cli.svg)](https://badge.fury.io/py/shen-cli)
+[![Python Version](https://img.shields.io/pypi/pyversions/shen-cli.svg)](https://pypi.org/project/shen-cli/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 这个项目会是一个AI命令行工具，专注于处理编程以外的事情
@@ -44,7 +44,7 @@
 ### 从 PyPI 安装（推荐）
 
 ```bash
-pip install shen
+pip install shen-cli
 ```
 
 ### 从源码安装

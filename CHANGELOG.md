@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.0-beta.0] - 2025-06-19
 
+### Changed
+- Package name changed from 'shen' to 'shen-cli' for PyPI compatibility
+
 ### Added
 - Initial project structure and setup
 - Basic CLI framework with Click
