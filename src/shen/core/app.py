@@ -4,6 +4,7 @@
 from shen import __version__
 from shen.core.config import Config
 from shen.core.plugin_manager import PluginManager
+from shen.mcp.manager import MCPManager
 
 
 class ShenApp:
@@ -18,6 +19,7 @@ class ShenApp:
         self.debug = debug
         self.config = Config()
         self.plugin_manager = PluginManager()
+        self.mcp_manager = MCPManager()
         self._initialize()
 
     def _initialize(self) -> None:
@@ -28,12 +30,18 @@ class ShenApp:
         # Initialize plugin manager
         self.plugin_manager.discover_plugins()
 
+        # Load MCP services
+        self.mcp_manager.load_services()
+
     def get_info(self) -> str:
         """Get information about Shen and its capabilities.
 
         Returns:
             Formatted information string
         """
+        mcp_services = len(self.mcp_manager.services)
+        connected_services = len([c for c in self.mcp_manager.clients.values() if c.is_connected])
+
         info_lines = [
             f"[bold]Shen v{__version__}[/bold]",
             "",
@@ -44,8 +52,10 @@ class ShenApp:
             "• Security checks",
             "• Information retrieval",
             "• Task automation",
+            "• MCP service integration",
             "",
             f"[cyan]Plugins loaded:[/cyan] {len(self.plugin_manager.plugins)}",
+            f"[cyan]MCP services:[/cyan] {connected_services}/{mcp_services} connected",
             f"[cyan]Debug mode:[/cyan] {'Enabled' if self.debug else 'Disabled'}",
         ]
 

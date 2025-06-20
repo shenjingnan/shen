@@ -15,6 +15,15 @@
 
 选择使用python实现
 
+## 特性
+
+- 🚀 **AI 驱动**：专注于非编程任务的自动化处理
+- 🔧 **MCP 集成**：支持 Model Context Protocol，可集成各种外部服务
+- 🎯 **任务导向**：基于自然语言描述执行各种日常任务
+- 📦 **插件系统**：可扩展的插件架构
+- 🛠️ **CLI 界面**：强大的命令行界面，支持交互模式
+- ⚡ **高性能**：异步处理，支持并发任务
+
 ## FAQ
 ### 为什么是做命令行工具？
 
@@ -77,6 +86,13 @@ shen run "帮我整理下载文件夹"
 
 # 交互模式运行任务
 shen run "检查系统安全" --interactive
+
+# MCP 服务管理
+shen mcp list                    # 列出所有 MCP 服务
+shen mcp connect service-name    # 连接到指定服务
+shen mcp disconnect service-name # 断开指定服务
+shen mcp tools                   # 列出所有可用工具
+shen mcp tools --service fs      # 列出特定服务的工具
 ```
 
 ### 调试模式
@@ -128,6 +144,49 @@ poetry run mypy src
 
 # 运行所有检查
 poetry run black src tests && poetry run ruff check src tests && poetry run mypy src
+```
+
+## MCP 集成
+
+Shen 支持 Model Context Protocol (MCP)，允许集成各种外部服务和工具。
+
+### 配置 MCP 服务
+
+MCP 服务配置文件位于 `~/.shen/mcp/` 目录下。每个服务一个 JSON 配置文件：
+
+```json
+{
+  "name": "filesystem",
+  "description": "文件系统操作服务",
+  "transport": "stdio",
+  "endpoint": "npx @modelcontextprotocol/server-filesystem",
+  "args": ["npx", "@modelcontextprotocol/server-filesystem", "/path/to/directory"],
+  "enabled": true,
+  "timeout": 30
+}
+```
+
+### 常用 MCP 服务
+
+- **文件系统服务**：文件和目录操作
+- **Git 服务**：版本控制操作
+- **数据库服务**：数据库查询和操作
+- **Web 服务**：网页抓取和 API 调用
+
+### MCP 命令示例
+
+```bash
+# 查看所有 MCP 服务状态
+shen mcp list
+
+# 连接到文件系统服务
+shen mcp connect filesystem
+
+# 查看可用工具
+shen mcp tools
+
+# 使用文件系统工具整理文件
+shen run "使用 filesystem 服务整理下载文件夹"
 ```
 
 ### 贡献指南
