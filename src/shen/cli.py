@@ -101,6 +101,141 @@ def plugins(ctx: click.Context) -> None:
     console.print(Panel(plugins_info, title="Available Plugins", border_style="blue"))
 
 
+@cli.group()
+def mcp() -> None:
+    """MCP (Model Context Protocol) service management."""
+    pass
+
+
+@mcp.command("list")
+@click.pass_context
+def mcp_list(ctx: click.Context) -> None:
+    """List MCP services and their status."""
+    app: ShenApp = ctx.obj["app"]
+    status = app.mcp_manager.get_status()
+
+    if not status:
+        console.print("[yellow]No MCP services configured.[/yellow]")
+        console.print("Run 'shen mcp add' to configure a service.")
+        return
+
+    from rich.table import Table
+
+    table = Table(title="MCP Services")
+    table.add_column("Name", style="cyan")
+    table.add_column("Description")
+    table.add_column("Transport")
+    table.add_column("Status", style="green")
+    table.add_column("Enabled")
+
+    for name, info in status.items():
+        status_text = "🟢 Connected" if info["connected"] else "🔴 Disconnected"
+        enabled_text = "✅" if info["enabled"] else "❌"
+
+        table.add_row(
+            name,
+            info["description"][:50] + "..."
+            if len(info["description"]) > 50
+            else info["description"],
+            info["transport"],
+            status_text,
+            enabled_text,
+        )
+
+    console.print(table)
+
+
+@mcp.command("connect")
+@click.argument("service_name")
+@click.pass_context
+def mcp_connect(ctx: click.Context, service_name: str) -> None:
+    """Connect to an MCP service."""
+    import asyncio
+
+    app: ShenApp = ctx.obj["app"]
+
+    async def connect() -> None:
+        success = await app.mcp_manager.connect_service(service_name)
+        if success:
+            console.print(f"[green]✅ Connected to {service_name}[/green]")
+        else:
+            console.print(f"[red]❌ Failed to connect to {service_name}[/red]")
+
+    asyncio.run(connect())
+
+
+@mcp.command("disconnect")
+@click.argument("service_name")
+@click.pass_context
+def mcp_disconnect(ctx: click.Context, service_name: str) -> None:
+    """Disconnect from an MCP service."""
+    import asyncio
+
+    app: ShenApp = ctx.obj["app"]
+
+    async def disconnect() -> None:
+        await app.mcp_manager.disconnect_service(service_name)
+        console.print(f"[yellow]Disconnected from {service_name}[/yellow]")
+
+    asyncio.run(disconnect())
+
+
+@mcp.command("tools")
+@click.option("--service", help="Show tools from specific service")
+@click.pass_context
+def mcp_tools(ctx: click.Context, service: str) -> None:
+    """List available MCP tools."""
+    import asyncio
+
+    app: ShenApp = ctx.obj["app"]
+
+    async def list_tools() -> None:
+        if service:
+            client = app.mcp_manager.get_client(service)
+            if not client or not client.is_connected:
+                console.print(f"[red]Service {service} not connected[/red]")
+                return
+
+            try:
+                tools = await client.list_tools()
+                if not tools:
+                    console.print(f"[yellow]No tools available in {service}[/yellow]")
+                    return
+
+                from rich.table import Table
+
+                table = Table(title=f"Tools from {service}")
+                table.add_column("Name", style="cyan")
+                table.add_column("Description")
+
+                for tool in tools:
+                    table.add_row(tool.name, tool.description)
+
+                console.print(table)
+            except Exception as e:
+                console.print(f"[red]Error listing tools: {e}[/red]")
+        else:
+            all_tools = await app.mcp_manager.list_all_tools()
+            if not all_tools:
+                console.print("[yellow]No tools available from connected services[/yellow]")
+                return
+
+            from rich.table import Table
+
+            table = Table(title="All Available Tools")
+            table.add_column("Service", style="magenta")
+            table.add_column("Tool", style="cyan")
+            table.add_column("Description")
+
+            for service_name, tools in all_tools.items():
+                for tool in tools:
+                    table.add_row(service_name, tool.name, tool.description)
+
+            console.print(table)
+
+    asyncio.run(list_tools())
+
+
 def main() -> None:
     """Main entry point."""
     cli(obj={})

@@ -9,12 +9,18 @@ Shen 是一个探索性的 AI 命令行工具项目，旨在处理编程以外�
 ### 核心特点
 - **语言**: Python
 - **类型**: CLI 工具
-- **集成**: 计划整合 MCP (Model Context Protocol) 服务
+- **MCP 集成**: 已实现 Model Context Protocol 客户端，支持多种传输方式
 - **目标**: 文档整理、垃圾清理、信息提供、Office 文档制作、安全检查、软件安装等日常任务
 
 ## 项目状态
 
-**注意**: 项目刚刚初始化，目前还没有实际代码实现。
+**当前版本**: 0.0.0-beta.0
+- ✅ 基础 CLI 框架已实现
+- ✅ MCP 客户端和服务管理器已完成
+- ✅ 支持 HTTP、WebSocket 和 STDIO 传输
+- ✅ 基础测试覆盖
+- 🚧 任务执行引擎开发中
+- 🚧 插件系统开发中
 
 ## 开发指南
 
@@ -30,33 +36,68 @@ Shen 是一个探索性的 AI 命令行工具项目，旨在处理编程以外�
    - `pytest` 进行单元测试
    - `pre-commit` 进行提交前检查
 
-### CLI 架构建议
+### 当前架构
 
-基于项目目标，建议采用以下架构：
+项目采用以下架构设计：
 
-1. **命令结构**: 使用 `click` 或 `typer` 构建 CLI 界面
-2. **插件系统**: 为不同任务类型（文档处理、系统管理等）设计插件架构
-3. **MCP 集成**: 创建统一的 MCP 服务接口层
-4. **任务管理**: 实现任务队列和并行执行能力
-5. **配置管理**: 支持用户配置和任务配置
+1. **CLI 界面**: 使用 Click 构建，支持子命令和选项
+2. **MCP 集成**: 完整的 MCP 客户端实现，支持多种传输方式
+3. **服务管理**: MCPManager 管理所有 MCP 服务连接
+4. **配置系统**: 基于 Pydantic 的配置管理
+5. **日志记录**: Rich 集成的美观日志输出
 
-### 目录结构建议
+### 当前目录结构
 
 ```
 shen/
 ├── src/
-│   ├── shen/
-│   │   ├── __init__.py
-│   │   ├── cli.py          # CLI 入口
-│   │   ├── core/           # 核心功能
-│   │   ├── plugins/        # 任务插件
-│   │   ├── mcp/           # MCP 集成
-│   │   └── utils/         # 工具函数
+│   └── shen/
+│       ├── __init__.py
+│       ├── cli.py          # CLI 入口点
+│       ├── core/           # 核心功能模块
+│       │   ├── app.py      # 主应用类
+│       │   ├── config.py   # 配置管理
+│       │   └── plugin_manager.py  # 插件管理器
+│       ├── mcp/            # MCP 集成模块
+│       │   ├── client.py   # MCP 客户端
+│       │   ├── manager.py  # MCP 服务管理器
+│       │   └── models.py   # MCP 数据模型
+│       ├── plugins/        # 插件目录
+│       └── utils/          # 工具函数
+│           └── logging.py  # 日志工具
 ├── tests/                  # 测试文件
-├── docs/                   # 文档
 ├── pyproject.toml         # 项目配置
-└── README.md
+├── CLAUDE.md              # Claude 使用指南
+└── README.md              # 项目说明
 ```
+
+## MCP 集成指南
+
+### 常用命令
+
+```bash
+# 安装依赖
+poetry install
+
+# 运行 Shen
+poetry run shen
+
+# 查看 MCP 服务
+poetry run shen mcp list
+
+# 连接 MCP 服务
+poetry run shen mcp connect service-name
+
+# 查看可用工具
+poetry run shen mcp tools
+```
+
+### MCP 服务配置
+
+MCP 服务配置示例位于 `~/.shen/mcp/` 目录，支持：
+- **STDIO**: 进程通信方式
+- **HTTP**: REST API 方式  
+- **WebSocket**: 实时通信方式
 
 ## 与 Claude Code 的差异化定位
 
