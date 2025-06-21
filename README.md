@@ -4,6 +4,27 @@
 [![Python Version](https://img.shields.io/pypi/pyversions/shen-cli.svg)](https://pypi.org/project/shen-cli/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+
+目前的AI相关的工作流都是通过一个可视化界面拖拽实现
+但是这是最终形态吗？
+UI交互有三个缺陷
+1. 维护性差
+2. 操作难度随着节点增加变得更加复杂
+3. 创建效率差
+
+还有一个优点
+1. 足够的可视化，够直观
+
+有没有可能通过和AI互动自动生成初始workflow，文本格式，或者json格式，或者任何平台能接受的文本格式
+然后如果我们觉得不满意可以让AI帮我们调整
+
+这样既增强了可维护性（因为是文本，我们自己可以手动维护，就像markdown一样）
+又利用AI简化了我们创建工作流的操作
+而工作流就像代码一样，一旦我们确定之后他就可以到处复用
+
+原先我们为什么不通过文本编写工作流的主要原因是可视化不足，人类对于UI更容易理解，但这对于AI来说并不是难点，反而AI更喜欢文本处理，文本推理的价格又足够的便宜
+
+
 这个项目会是一个AI命令行工具，专注于处理编程以外的事情
 
 因为我看到了Claude Code神一样的编程能力，他的交互和效果令我惊讶。
